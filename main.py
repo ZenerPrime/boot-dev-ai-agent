@@ -3,8 +3,16 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
+from functions.get_files_info import get_files_info
+
 
 def main():
+
+    results = get_files_info("calculator", ".")
+    print(results)
+    
+    return
+
     argsLen = len(sys.argv)
     if argsLen < 2:
         print("Invalid input. Try again.")
