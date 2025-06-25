@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-from functions.run_python_file import *
+from functions.call_function import call_function
 
 
 def main():
@@ -124,9 +124,8 @@ All paths you provide should be relative to the working directory. You do not ne
 
     if response.function_calls:
         for function_call_part in response.function_calls:
-            print(f"Calling function: {function_call_part.name}({function_call_part.args})")
+            print(call_function(function_call_part, verbose))
     else:
         print(response.text)
-
 
 main()
