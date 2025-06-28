@@ -109,23 +109,30 @@ All paths you provide should be relative to the working directory. You do not ne
         ]
     )
 
-    response = client.models.generate_content(
-        model= "gemini-2.0-flash-001",
-        contents= messages,
-        config= types.GenerateContentConfig(
-            tools=[available_functions],
-            system_instruction= system_prompt))
+    for i in range(20):
+        response = client.models.generate_content(
+            model= "gemini-2.0-flash-001",
+            contents= messages,
+            config= types.GenerateContentConfig(
+                tools=[available_functions],
+                system_instruction= system_prompt))
+        
+        for candidate in response.candidates:
+            messages.append(candidate.content)
 
-    if verbose:
-        print(f"User prompt: {user_prompt}")
-        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count }")
-        print(f"Response tokens: {response.usage_metadata.candidates_token_count }")
-        print("\n")
+        if verbose:
+            print(f"User prompt: {user_prompt}")
+            print(f"Prompt tokens: {response.usage_metadata.prompt_token_count }")
+            print(f"Response tokens: {response.usage_metadata.candidates_token_count }")
+            print("\n")
 
-    if response.function_calls:
-        for function_call_part in response.function_calls:
-            print(call_function(function_call_part, verbose))
-    else:
-        print(response.text)
+        if response.function_calls:
+            for function_call_part in response.function_calls:
+                messages.append(call_function(function_call_part, verbose))
+        else:
+            break
+    
+    print("Final Reaponse:\n")
+    print(response.text)
 
 main()
